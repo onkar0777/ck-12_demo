@@ -1,10 +1,13 @@
-function createNode(element, id, cssClass) {
+function createNode(element, id, cssClass, needEventListener) {
     el = document.createElement(element);
     if(id) {
         el.setAttribute("id", id);
     }
     if(cssClass) {
         el.setAttribute("class", cssClass);
+    }
+    if(needEventListener) {
+        el.addEventListener('click', onChapterClick)
     }
     return el;
 }
@@ -23,7 +26,7 @@ fetch(url)
   return chapters.map((chapter, index) => {
     let li, span = createNode('span'), span2=createNode('span','', 'secondaryText'), span3 = createNode('span','', 'statusTag');
     if(chapter.type === 'chapter') {
-        li = createNode('li', chapter.id, 'chapterListItem');
+        li = createNode('li', chapter.id, 'chapterListItem', true);
         span.innerHTML = ` &#128214;  ${chapter.title}`;
         span2.innerHTML = `(${chapter.childrenCount} concepts)`;
         span3.innerHTML = `${Math.round(chapter.completeCount / chapter.childrenCount)*100}% Complete`;
@@ -43,16 +46,15 @@ fetch(url)
 });   
 
 
-document.addEventListener('click',function(e){
-    console.log(e.target.className)
-    if(e.target && e.target.className == 'chapterListItem'){
-          //do something
-          fetch(`${url}/section/${e.target.id}`)
+function onChapterClick(e) {
+    let element = e.currentTarget;
+    if(element && element.className == 'chapterListItem'){
+          fetch(`${url}/section/${e.currentTarget.id}`)
           .then((resp) => resp.json())
           .then((data) => {
-            let lessons = data.response[e.target.id];
-            lessons.sort((a,b) => a.sequenceNO > b.sequenceNO)
-            const parentLi = document.getElementById(e.target.id);
+            let lessons = data.response[element.id];
+            lessons.sort((a,b) => a.sequenceNO - b.sequenceNO);
+            const parentLi = document.getElementById(element.id);
             const childUl = createNode('ul');
             lessons.map(function(lesson) {
               let li = createNode('li', lesson.id, 'lessonListItem'),
@@ -67,14 +69,14 @@ document.addEventListener('click',function(e){
             append(parentLi, childUl);
             parentLi.setAttribute('class', 'showChapters chapterListItem');
         });
-    } else if(e.target && e.target.className == 'showChapters chapterListItem'){
-        const parentLi = document.getElementById(e.target.id);
+    } else if(element && element.className == 'showChapters chapterListItem'){
+        const parentLi = document.getElementById(element.id);
         parentLi.setAttribute('class', 'hideChapters chapterListItem');
-    } else if(e.target && e.target.className == 'hideChapters chapterListItem') {
-        const parentLi = document.getElementById(e.target.id);
+    } else if(element && element.className == 'hideChapters chapterListItem') {
+        const parentLi = document.getElementById(element.id);
         parentLi.setAttribute('class', 'showChapters chapterListItem');
     }
- });
+ };
 
  function getStatusText(status) {
      if(status === 'COMPLETE') {
