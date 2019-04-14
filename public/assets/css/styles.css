@@ -1,0 +1,120 @@
+.text-center {
+    text-align: center;
+}
+
+body {
+    color: rgb(70, 68, 68);
+}
+
+.navbar {
+    background-color: white;
+    margin-top: 0.2rem;
+    padding: 1rem;
+}
+
+.navbar .brand {
+    font-size: 1.2rem;
+}
+
+.button {
+    background-color: teal;
+    color: white;
+    border-radius: 5%;
+    padding: 1rem;
+    text-decoration: none;
+    font-size: 1.1rem;
+}
+
+.button.btn-round {
+    border-radius: 50%;
+    padding: 0.5rem;
+}
+
+.chapterList {
+    margin: 0;
+    padding: 0;
+}
+
+.chapterListItem {
+    background-color: rgb(238, 238, 238);
+    margin: 1rem;
+    padding: 1rem;
+    list-style: none;
+    font-size: 1.2rem;
+}
+
+.chapterListItem:hover {
+    background-color: teal;
+    color: white;
+}
+
+.lessonListItem {
+    padding: 1rem;
+    list-style: disclosure-closed;
+    font-size: 1rem;
+    color: teal;
+}
+
+.secondaryText {
+    margin-left: 0.5rem;
+    font-size: 0.9rem;
+}
+
+.statusTag {
+    background-color: lightblue;
+    border-radius: 10%;
+    font-size: 0.8rem;
+    margin-left: 1rem;
+    padding: 0.5rem;
+    color: rgb(70, 68, 68); 
+}
+
+.chapterListItem.showChapters:hover {
+    background-color: rgb(238, 238, 238);
+    color: black;
+}
+
+.chapterListItem.showChapters ul {
+    display: block;
+    visibility: visible;
+    opacity: 1;
+    
+    -webkit-animation: fadein 1.5s; /* Safari, Chrome and Opera > 12.1 */
+       -moz-animation: fadein 1.5s; /* Firefox < 16 */
+        -ms-animation: fadein 1.5s; /* Internet Explorer */
+         -o-animation: fadein 1.5s; /* Opera < 12.1 */
+            animation: fadein 1.5s;
+  }
+
+  .chapterListItem.hideChapters ul {
+    position: absolute;
+    display: none;
+    opacity: 0;
+    visibility: hidden;
+    padding: 10px;
+    -webkit-transition: opacity 600ms, visibility 600ms;
+            transition: opacity 600ms, visibility 600ms;
+  }
+
+  @keyframes fadein {
+    from { opacity: 0; }
+    to   { opacity: 1; }
+}
+
+/* Firefox < 16 */
+@-moz-keyframes fadein {
+    from { opacity: 0; }
+    to   { opacity: 1; }
+}
+
+/* Safari, Chrome and Opera > 12.1 */
+@-webkit-keyframes fadein {
+    from { opacity: 0; }
+    to   { opacity: 1; }
+}
+
+/* Internet Explorer */
+@-ms-keyframes fadein {
+    from { opacity: 0; }
+    to   { opacity: 1; }
+}
