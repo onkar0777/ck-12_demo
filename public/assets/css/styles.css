@@ -69,6 +69,70 @@ body {
     color: rgb(70, 68, 68); 
 }
 
+.redStatus {
+    background-color: maroon;
+    color: white;
+}
+
+.orangeStatus {
+    background-color: darkorange;
+    color: white;
+}
+
+.showRed .orangeStatusLi {
+    display: none;
+}
+
+.greenStatus {
+    background-color: darkgreen;
+    color: white;
+}
+
+.showRed .greenStatusLi {
+    display: none;
+}
+
+.blueStatus {
+    background-color: darkblue;
+    color: white;
+}
+
+.showRed .blueStatusLi {
+    display: none;
+}
+
+.showOrange .redStatusLi {
+    display: none;
+}
+
+.showOrange .greenStatusLi {
+    display: none;
+}
+
+.showOrange .blueStatusLi {
+    display: none;
+}
+
+.showGreen .redStatusLi {
+    display: none;
+}
+.showGreen .orangeStatusLi {
+    display: none;
+}
+.showGreen .blueStatusLi {
+    display: none;
+}
+
+.showBlue .redStatusLi {
+    display: none;
+}
+.showBlue .orangeStatusLi {
+    display: none;
+}
+.showBlue .greenStatusLi {
+    display: none;
+}
+
 .chapterListItem.showChapters:hover {
     background-color: rgb(238, 238, 238);
     color: black;

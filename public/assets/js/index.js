@@ -13,7 +13,6 @@ function createNode(element, id, cssClass, needEventListener) {
 }
 
 function append(parent, el) {
-    // console.log(parent, el);
   return parent.appendChild(el);
 }
 
@@ -26,10 +25,12 @@ fetch(url)
   return chapters.map((chapter, index) => {
     let li, span = createNode('span'), span2=createNode('span','', 'secondaryText'), span3 = createNode('span','', 'statusTag');
     if(chapter.type === 'chapter') {
-        li = createNode('li', chapter.id, 'chapterListItem', true);
+        let percentage = Math.round((chapter.completeCount / chapter.childrenCount)*100)
+        li = createNode('li', chapter.id, `${getStatusClassForLi(percentage)} chapterListItem`, true);
         span.innerHTML = ` &#128214;  ${chapter.title}`;
         span2.innerHTML = `(${chapter.childrenCount} concepts)`;
-        span3.innerHTML = `${Math.round(chapter.completeCount / chapter.childrenCount)*100}% Complete`;
+        span3.innerHTML = `${percentage}% Complete`;
+        span3.setAttribute('class', `statusTag ${getStatusClass(percentage)}`)
         append(li, span);
         append(li, span2);
         append(li, span3);
@@ -45,16 +46,18 @@ fetch(url)
   console.log(error);
 });   
 
+var lastOpenedEl;
 
 function onChapterClick(e) {
     let element = e.currentTarget;
-    if(element && element.className == 'chapterListItem'){
+    console.log(lastOpenedEl);    
+    if(element && element.className == `${getStatusClassForLi(parseInt(element.childNodes[2].innerHTML.slice(0,3)))} chapterListItem`){
+        element.setAttribute('class', 'apiCall chapterListItem');
           fetch(`${url}/section/${e.currentTarget.id}`)
           .then((resp) => resp.json())
           .then((data) => {
             let lessons = data.response[element.id];
             lessons.sort((a,b) => a.sequenceNO - b.sequenceNO);
-            const parentLi = document.getElementById(element.id);
             const childUl = createNode('ul');
             lessons.map(function(lesson) {
               let li = createNode('li', lesson.id, 'lessonListItem'),
@@ -66,15 +69,24 @@ function onChapterClick(e) {
               append(li, span2);
               append(childUl, li);
             });
-            append(parentLi, childUl);
-            parentLi.setAttribute('class', 'showChapters chapterListItem');
+            append(element, childUl);
+            element.setAttribute('class', `showChapters ${getStatusClassForLi(parseInt(element.childNodes[2].innerHTML.slice(0,3)))} chapterListItem`);
+            if(lastOpenedEl) {
+                console.log(lastOpenedEl);
+                lastOpenedEl.setAttribute('class', `hideChapters ${getStatusClassForLi(parseInt(lastOpenedEl.childNodes[2].innerHTML.slice(0,3)))} chapterListItem`);
+            }
+            console.log(element.className);
+            lastOpenedEl = element;
         });
-    } else if(element && element.className == 'showChapters chapterListItem'){
-        const parentLi = document.getElementById(element.id);
-        parentLi.setAttribute('class', 'hideChapters chapterListItem');
-    } else if(element && element.className == 'hideChapters chapterListItem') {
-        const parentLi = document.getElementById(element.id);
-        parentLi.setAttribute('class', 'showChapters chapterListItem');
+    } else if(element && element.className == `showChapters ${getStatusClassForLi(parseInt(element.childNodes[2].innerHTML.slice(0,3)))} chapterListItem`){
+        element.setAttribute('class', `hideChapters ${getStatusClassForLi(parseInt(element.childNodes[2].innerHTML.slice(0,3)))} chapterListItem`);
+    } else if(element && element.className == `hideChapters ${getStatusClassForLi(parseInt(element.childNodes[2].innerHTML.slice(0,3)))} chapterListItem`) {
+        element.setAttribute('class', `showChapters ${getStatusClassForLi(parseInt(element.childNodes[2].innerHTML.slice(0,3)))} chapterListItem`);
+        console.log(lastOpenedEl);        
+        if(lastOpenedEl && lastOpenedEl != element) {
+            lastOpenedEl.setAttribute('class', `hideChapters ${getStatusClassForLi(parseInt(lastOpenedEl.childNodes[2].innerHTML.slice(0,3)))} chapterListItem`);
+        }
+        lastOpenedEl = element;
     }
  };
 
@@ -86,4 +98,34 @@ function onChapterClick(e) {
     } else if(status === 'NOT_STARTED') {
         return 'Not Started';
     }
+ }
+
+ function getStatusClass(percentage) {
+    if(percentage < 33) {
+        return 'redStatus';
+    } else if(percentage < 66) {
+        return 'orangeStatus';
+    } else if(percentage < 99) {
+        return 'greenStatus';
+    } else {
+        return 'blueStatus';    
+    }
+ }
+
+ function getStatusClassForLi(percentage) {
+    if(percentage < 33) {
+        return 'redStatusLi';
+    } else if(percentage < 66) {
+        return 'orangeStatusLi';
+    } else if(percentage < 99) {
+        return 'greenStatusLi';
+    } else {
+        return 'blueStatusLi';    
+    }
+ }
+
+
+ function changeFilter(el) {
+     console.log(el.value);
+     document.getElementById('chapters').setAttribute('class', `${el.value} chapterList`);
  }

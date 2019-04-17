@@ -14,6 +14,13 @@
     <h2 class="heading text-center">
         List of all chapters in Maths Book
     </h2>
+    <select onchange="changeFilter(this)">
+        <option value="">All</option>
+        <option value="showRed">0-33</option>
+        <option value="showOrange">33-66</option>
+        <option value="showGreen">66-99</option>
+        <option value="showBlue">100</option>
+    </select>
 
     <ul class="chapterList" id="chapters"></ul>
     
